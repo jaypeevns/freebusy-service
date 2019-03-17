@@ -1,0 +1,139 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "v1",
+    "title": "Free Busy Service",
+    "description": "This API will fetch details about calendar id free or busy status.",
+    "contact": {}
+  },
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/getFreeBusy": {
+      "get": {
+        "description": "Provide start date and calender id. make sure that make sure Calendar owner shared calendar access to you",
+        "summary": "Get user status of the availability ",
+        "tags": [
+          "Free Busy Service"
+        ],
+        "operationId": "get_free_busy",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "Start date of the calendar"
+          },
+          {
+            "name": "calendarID",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "enter Calendar Id. it is Gmail Id of the person"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success response"
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Pet not found"
+          },
+          "405": {
+            "description": "Validation exception"
+          }
+        },
+        "security": [
+          {
+            "freebusy_auth": [
+              "write:calendar",
+              "read:calendar"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "freebusy_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://accounts.google.com/o/oauth2/auth",
+      "flow": "implicit",
+      "scopes": {
+        "https://www.googleapis.com/auth/calendar": "modify calendar",
+        "https://www.googleapis.com/auth/calendar.readonly": "read your calendar"
+      }
+    }
+  },
+  "definitions": {
+    "ReportRequest": {
+      "title": "ReportRequest",
+      "type": "object",
+      "properties": {
+        "header": {
+          "type": "object",
+          "example": {
+            "template": {
+              "workspaceName": "Project",
+              "folder": "Project Templates",
+              "name": "Addendum Sales MSC ENG R13 Quote Number - 1-2FJD03W_sub.docx"
+            },
+            "metadata": {
+              "language": "en",
+              "local-unit": "finland"
+            },
+            "report": {
+              "id": "58781",
+              "name": "28nov2018_1",
+              "type": "docx"
+            }
+          }
+        },
+        "data": {
+          "type": "object",
+          "example": {
+            "account": {
+              "required": "false"
+            },
+            "audit": {
+              "required": "false"
+            },
+            "project": {
+              "required": "true"
+            },
+            "certificate": {
+              "required": "false"
+            },
+            "quote": {
+              "required": "false"
+            },
+            "custom": {
+              "businesslogic": "activitycalculation"
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Free Busy Service",
+      "description": "This is foundation API and will be used to fetch availability of person. Just fill the request body right."
+    }
+  ]
+}
