@@ -11,6 +11,7 @@ const _ = require('underscore');
 const async = require('async');
 const uuid = require('uuid/v4');
 const logger = require('./utils/logger.js');
+const swaggerTools = require('oas-tools');
 
 fs.existsSync = fs.existsSync || require('path').existsSync;
 
@@ -25,11 +26,48 @@ app.use((req, res, next)=> {
     httpContext.set('reqId', uuid());
     next();
 });
+let spec = fs.readFileSync(path.join(__dirname, '/config/oas-doc.yaml'));
+const jsyaml = require('js-yaml');
+let swaggerDoc = jsyaml.safeLoad(spec);
+var options_object = {
+    controllers: path.join(__dirname, './controllers'),
+    checkControllers: true,
+    loglevel: 'info',
+    logfile: path.join(__dirname, './logs'),
+    // customLogger: myLogger,
+    strict: false,
+    router: true,
+    validator: true,
+    docs: {
+        apiDocs: '/api-docs',
+        apiDocsPrefix: '',
+        swaggerUi: '/docs',
+        swaggerUiPrefix: ''
+    },
+    oasSecurity: false,
+    securityFile: {
+        // your security settings
+    },
+    oasAuth: true,
+    grantsFile: {
+        // your authorization settings
+    },
+    ignoreUnknownFormats: true
+}
+
+swaggerTools.configure(options_object);
+
+swaggerTools.initializeMiddleware(swaggerDoc, app, function(middleware) {
+    app.listen(port, () => {
+        console.log("server started listing to request on port %s",port);
+    })
+});
 
 /***************************************************************
  *  Swaggerize the application as a whole.
  *  This will be provided to deployment team for APIM as well.
  ***************************************************************/
+/*
 
 app.use(swaggerize({
     api: path.resolve('./config/openapi.json'),
@@ -47,9 +85,9 @@ app.get('/getFreeBusy', (req, res) => {
     id.getFreeBusy(req,res);
 });
 
-/**********************************************************
+/!**********************************************************
  *  Create the NodeJS Server.
- **********************************************************/
+ **********************************************************!/
 app.listen(port, () => {
     console.log("server started listing to request on port %s",port);
-});
+});*/

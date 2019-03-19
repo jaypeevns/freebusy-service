@@ -13,7 +13,6 @@ exports.free_busy_service = (data_check) => {
     // The file token.json stores the user's access and refresh tokens, and is
     // created automatically when the authorization flow completes for the first time.
     const TOKEN_PATH = 'token.json';
-
     const {client_secret, client_id, redirect_uris} = credentialJson.installed;
     let oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
     return new Promise((resolve, reject) => {
@@ -38,6 +37,9 @@ exports.free_busy_service = (data_check) => {
  * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
  */
 function getAccessToken(oAuth2Client) {
+    // The file token.json stores the user's access and refresh tokens, and is
+    // created automatically when the authorization flow completes for the first time.
+    const TOKEN_PATH = 'token.json';
     // If modifying these scopes, delete token.json.
     const SCOPES = ['https://www.googleapis.com/auth/calendar','https://www.googleapis.com/auth/calendar.readonly'];
     return new Promise((resolve, reject) =>{
@@ -46,12 +48,14 @@ function getAccessToken(oAuth2Client) {
             scope: SCOPES,
         });
         console.log('Authorize this app by visiting this url:', authUrl);
-        const rl = readline.createInterface({
+        /*const rl = readline.createInterface({
             input: process.stdin,
             output: process.stdout,
-        });
-        rl.question('Enter the code from that page here: ', (code) => {
-            rl.close();
+        });*/
+        /*rl.question('Enter the code from that page here: ', (code) => {
+            rl.close();*/
+        let code = "4/EgGQsQawew09z8lK_Vw3Me4QejQP71Gfi-q1RRX233AMo42ZgM2nh2M";
+            console.log("Code:--"+code);
             oAuth2Client.getToken(code, (err, token) => {
                 if (err) {
                     console.error('Error retrieving access token', err);
@@ -69,7 +73,7 @@ function getAccessToken(oAuth2Client) {
                     resolve(oAuth2Client);
                 }
             });
-        });
+        //});
     }).catch((err)=>{
         throw err;
     });

@@ -1,47 +1,38 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.0",
   "info": {
     "version": "v1",
     "title": "Free Busy Service",
     "description": "This API will fetch details about calendar id free or busy status.",
     "contact": {}
   },
-  "basePath": "/",
-  "schemes": [
-    "http"
-  ],
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
   "paths": {
     "/getFreeBusy": {
       "get": {
-        "description": "Provide start date and calender id. make sure that make sure Calendar owner shared calendar access to you",
+        "description": "Provide start date and calender id. make sure that make sure Calendar\nowner shared calendar access to you",
         "summary": "Get user status of the availability ",
         "tags": [
           "Free Busy Service"
         ],
         "operationId": "get_free_busy",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "name": "startDate",
             "in": "query",
             "required": true,
-            "type": "string",
-            "description": "Start date of the calendar"
+            "description": "Start date of the calendar",
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "calendarID",
             "in": "query",
             "required": true,
-            "type": "string",
-            "description": "enter Calendar Id. it is Gmail Id of the person"
+            "description": "enter Calendar Id. it is Gmail Id of the person",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -69,71 +60,31 @@
       }
     }
   },
-  "securityDefinitions": {
-    "freebusy_auth": {
-      "type": "oauth2",
-      "authorizationUrl": "https://accounts.google.com/o/oauth2/auth",
-      "flow": "implicit",
-      "scopes": {
-        "https://www.googleapis.com/auth/calendar": "modify calendar",
-        "https://www.googleapis.com/auth/calendar.readonly": "read your calendar"
-      }
+  "tags": [
+    {
+      "name": "Free Busy Service",
+      "description": "This is foundation API and will be used to fetch availability of person.\nJust fill the request body right."
     }
-  },
-  "definitions": {
-    "ReportRequest": {
-      "title": "ReportRequest",
-      "type": "object",
-      "properties": {
-        "header": {
-          "type": "object",
-          "example": {
-            "template": {
-              "workspaceName": "Project",
-              "folder": "Project Templates",
-              "name": "Addendum Sales MSC ENG R13 Quote Number - 1-2FJD03W_sub.docx"
-            },
-            "metadata": {
-              "language": "en",
-              "local-unit": "finland"
-            },
-            "report": {
-              "id": "58781",
-              "name": "28nov2018_1",
-              "type": "docx"
-            }
-          }
-        },
-        "data": {
-          "type": "object",
-          "example": {
-            "account": {
-              "required": "false"
-            },
-            "audit": {
-              "required": "false"
-            },
-            "project": {
-              "required": "true"
-            },
-            "certificate": {
-              "required": "false"
-            },
-            "quote": {
-              "required": "false"
-            },
-            "custom": {
-              "businesslogic": "activitycalculation"
+  ],
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "freebusy_auth": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://accounts.google.com/o/oauth2/auth",
+            "scopes": {
+              "https://www.googleapis.com/auth/calendar": "modify calendar",
+              "https://www.googleapis.com/auth/calendar.readonly": "read your calendar"
             }
           }
         }
       }
     }
-  },
-  "tags": [
-    {
-      "name": "Free Busy Service",
-      "description": "This is foundation API and will be used to fetch availability of person. Just fill the request body right."
-    }
-  ]
+  }
 }
